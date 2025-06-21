@@ -6,9 +6,9 @@ export default function Rewards() {
   const [user, setUser] = useState(null);
 
   const rewards = [
-    { name: "🎁 $5 Gift Card", cost: 50 },
-    { name: "📱 Phone Charger", cost: 100 },
-    { name: "🎧 Bluetooth Speaker", cost: 250 },
+    { name: "🎁 $5 Gift Card", cost: 150 },
+    { name: "📱 Phone Charger", cost: 350 },
+    { name: "🎧 Bluetooth Speaker", cost: 550 },
     { name: "🎉 Mystery Grand Prize", cost: 9999 }, // unreachable on purpose
   ];
 
