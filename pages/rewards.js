@@ -5,6 +5,13 @@ export default function Rewards() {
   const router = useRouter();
   const [user, setUser] = useState(null);
 
+  const rewards = [
+    { name: "🎁 $5 Gift Card", cost: 50 },
+    { name: "📱 Phone Charger", cost: 100 },
+    { name: "🎧 Bluetooth Speaker", cost: 250 },
+    { name: "🎉 Mystery Grand Prize", cost: 9999 }, // unreachable on purpose
+  ];
+
   useEffect(() => {
     const unit = localStorage.getItem("loggedInUser");
     const users = JSON.parse(localStorage.getItem("users") || "[]");
@@ -16,6 +23,11 @@ export default function Rewards() {
     }
   }, []);
 
+  const handleRedeem = (reward) => {
+    alert(`You redeemed: ${reward.name}`);
+    // Future: actually deduct points and update user
+  };
+
   if (!user) return <div>Loading...</div>;
 
   return (
@@ -26,12 +38,29 @@ export default function Rewards() {
       <div style={{ marginTop: 30 }}>
         <h2>Available Rewards</h2>
         <ul>
-          <li>🎁 $5 Gift Card – <strong>150 pts</strong></li>
-          <li>📱 Phone Charger – <strong>500 pts</strong></li>
-          <li>🎧 Bluetooth Speaker – <strong>1000 pts</strong></li>
-          <li>🎉 Mystery Grand Prize – <strong>Top Recycler Only</strong></li>
+          {rewards.map((reward, index) => (
+            <li key={index} style={{ marginBottom: 10 }}>
+              {reward.name} – <strong>{reward.cost === 9999 ? "Top Recycler Only" : `${reward.cost} pts`}</strong>
+              {reward.cost !== 9999 && (
+                <button
+                  onClick={() => handleRedeem(reward)}
+                  disabled={user.points < reward.cost}
+                  style={{
+                    marginLeft: 10,
+                    padding: "4px 10px",
+                    backgroundColor: user.points >= reward.cost ? "green" : "gray",
+                    color: "white",
+                    border: "none",
+                    borderRadius: 4,
+                    cursor: user.points >= reward.cost ? "pointer" : "not-allowed",
+                  }}
+                >
+                  Redeem
+                </button>
+              )}
+            </li>
+          ))}
         </ul>
-        <p style={{ marginTop: 20 }}>Keep recycling to unlock more!</p>
       </div>
     </div>
   );
