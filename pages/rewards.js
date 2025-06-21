@@ -26,9 +26,9 @@ export default function Rewards() {
       <div style={{ marginTop: 30 }}>
         <h2>Available Rewards</h2>
         <ul>
-          <li>🎁 $5 Gift Card – <strong>50 pts</strong></li>
-          <li>📱 Phone Charger – <strong>100 pts</strong></li>
-          <li>🎧 Bluetooth Speaker – <strong>250 pts</strong></li>
+          <li>🎁 $5 Gift Card – <strong>150 pts</strong></li>
+          <li>📱 Phone Charger – <strong>500 pts</strong></li>
+          <li>🎧 Bluetooth Speaker – <strong>1000 pts</strong></li>
           <li>🎉 Mystery Grand Prize – <strong>Top Recycler Only</strong></li>
         </ul>
         <p style={{ marginTop: 20 }}>Keep recycling to unlock more!</p>
