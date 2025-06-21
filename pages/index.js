@@ -1,38 +1,49 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 export default function Home() {
+  const router = useRouter();
   const [user, setUser] = useState(null);
-  const [points, setPoints] = useState(0);
   const [plastic, setPlastic] = useState(0);
   const [cans, setCans] = useState(0);
   const [glass, setGlass] = useState(0);
 
-  const handleLogin = () => {
-    setUser({ name: "Demo User", unit: "101" });
-  };
+  useEffect(() => {
+    const unit = localStorage.getItem("loggedInUser");
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    const current = users.find((u) => u.unit === unit);
+    if (!current) {
+      router.push("/login");
+    } else {
+      setUser(current);
+    }
+  }, []);
 
   const addPoints = () => {
     const total = plastic + cans + glass;
-    setPoints(points + total);
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    const updated = users.map((u) =>
+      u.unit === user.unit ? { ...u, points: u.points + total } : u
+    );
+    localStorage.setItem("users", JSON.stringify(updated));
+    setUser((prev) => ({ ...prev, points: prev.points + total }));
     setPlastic(0);
     setCans(0);
     setGlass(0);
   };
 
-  if (!user) {
-    return (
-      <div style={{ textAlign: "center", paddingTop: "100px" }}>
-        <h1>WRR Tracker Login</h1>
-        <button onClick={handleLogin}>Demo Login</button>
-      </div>
-    );
-  }
+  const handleLogout = () => {
+    localStorage.removeItem("loggedInUser");
+    router.push("/login");
+  };
+
+  if (!user) return <div>Loading...</div>;
 
   return (
-    <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
-      <h1>Welcome, {user.name}</h1>
+    <div style={{ padding: 20, fontFamily: "sans-serif" }}>
+      <h1>Welcome, {user.name} (Unit {user.unit})</h1>
 
-      <div style={{ marginTop: "20px" }}>
+      <div style={{ marginTop: 20 }}>
         <h2>Add Recycled Items</h2>
         <label>
           Plastic Bottles 🥤:
@@ -52,10 +63,12 @@ export default function Home() {
         <button onClick={addPoints}>Add to Total</button>
       </div>
 
-      <div style={{ marginTop: "20px" }}>
+      <div style={{ marginTop: 20 }}>
         <h2>Your Points</h2>
-        <p style={{ fontSize: "24px", fontWeight: "bold" }}>{points} pts</p>
+        <p style={{ fontSize: "24px", fontWeight: "bold" }}>{user.points} pts</p>
       </div>
+
+      <button onClick={handleLogout} style={{ marginTop: 20, color: "red" }}>Logout</button>
     </div>
   );
 }
