@@ -1,4 +1,3 @@
-// trigger redeploy
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import NavBar from "../components/NavBar";
@@ -41,8 +40,8 @@ export default function Home() {
   if (!user) return <div>Loading...</div>;
 
   return (
-    <div style={{ padding: 20, fontFamily: "sans-serif" }}>
     <NavBar />
+    <div style={{ padding: 20, fontFamily: "sans-serif" }}>
       <h1>Welcome, {user.name} (Unit {user.unit})</h1>
 
       <div style={{ marginTop: 20 }}>
