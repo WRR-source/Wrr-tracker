@@ -22,8 +22,8 @@ export default function Leaderboard() {
   if (!currentUser) return <div>Loading...</div>;
 
   return (
-    <div style={{ padding: 20, fontFamily: "sans-serif" }}>
     <NavBar />
+    <div style={{ padding: 20, fontFamily: "sans-serif" }}>
       <h1>🏆 Leaderboard</h1>
       <p>Logged in as: <strong>{currentUser.name}</strong> (Unit {currentUser.unit})</p>
 
