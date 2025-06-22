@@ -1,4 +1,4 @@
-import NavBar from "../components/NavBar";import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
 export default function Home() {
