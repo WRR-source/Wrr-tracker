@@ -1,51 +1,50 @@
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-const [user, setUser] = useState(null);
+import Link from "next/link";
 
-useEffect(() => {
-  const storedUser = localStorage.getItem("loggedUser");
-  if (storedUser) {
-    setUser(JSON.parse(storedUser));
-  }
-}, []);
 export default function NavBar() {
   const router = useRouter();
-  
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // Safely read from localStorage on client-side only
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("loggedUser");
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    }
+  }, []);
+
   const handleLogout = () => {
     localStorage.removeItem("loggedUser");
     router.push("/login");
   };
 
   return (
-    <nav style={{
-      backgroundColor: "#e5f5e0",
-      padding: "10px 20px",
-      marginBottom: 30,
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      fontFamily: "sans-serif"
-    }}>
-      <div style={{ fontWeight: "bold", fontSize: "20px" }}>♻️ WRR Tracker</div>
+    <nav
+      style={{
+        backgroundColor: "#e5f5e0",
+        padding: "10px 20px",
+        marginBottom: 30,
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        fontFamily: "sans-serif",
+      }}
+    >
+      <div style={{ fontWeight: "bold", fontSize: 20 }}>WRR Tracker</div>
       <div style={{ display: "flex", gap: "15px" }}>
-        <button onClick={() => router.push("/")} style={btn}>Dashboard</button>
-        <button onClick={() => router.push("/rewards")} style={btn}>Rewards</button>
-        <button onClick={() => router.push("/leaderboard")} style={btn}>Leaderboard</button>
-        <button onClick={handleLogout} style={{ ...btn, backgroundColor: "tomato" }}>Logout</button>
+        <button onClick={() => router.push("/")}>Home</button>
+        <button onClick={() => router.push("/rewards")}>Rewards</button>
+        <button onClick={() => router.push("/leaderboard")}>Leaderboard</button>
         {user?.isAdmin && (
-  <Link href="/admin">
-    <button>Admin</button>
-  </Link>
-)}
+          <Link href="/admin">
+            <button>Admin</button>
+          </Link>
+        )}
+        <button onClick={handleLogout}>Logout</button>
       </div>
     </nav>
   );
 }
-
-const btn = {
-  padding: "6px 12px",
-  backgroundColor: "#4CAF50",
-  color: "white",
-  border: "none",
-  borderRadius: 4,
-  cursor: "pointer"
-};
