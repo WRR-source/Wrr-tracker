@@ -31,8 +31,8 @@ export default function Rewards() {
   if (!user) return <div>Loading...</div>;
 
   return (
-    <NavBar />
     <div style={{ padding: 20, fontFamily: "sans-serif" }}>
+    <NavBar />
       <h1>Rewards for {user.name}</h1>
       <p>You have <strong>{user.points} points</strong></p>
 
