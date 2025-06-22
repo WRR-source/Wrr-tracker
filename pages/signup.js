@@ -16,24 +16,33 @@ export default function Signup() {
     router.push("/");
   };
 
-  return (
-    <div style={{ textAlign: "center", marginTop: 100 }}>
-      <h1>Sign Up</h1>
+    return (
+  <div style={{ textAlign: "center", marginTop: 100 }}>
+    <h1>Sign Up</h1>
+
+    <input
+      type="text"
+      placeholder="Name"
+      value={name}
+      onChange={(e) => setName(e.target.value)}
+    />
+
+    <input
+      type="text"
+      placeholder="Unit"
+      value={unit}
+      onChange={(e) => setUnit(e.target.value)}
+    />
+
+    <label style={{ display: "block", margin: "10px 0" }}>
       <input
-        type="text"
-        placeholder="Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        type="checkbox"
+        checked={isAdmin}
+        onChange={(e) => setIsAdmin(e.target.checked)}
       />
-      <br />
-      <input
-        type="text"
-        placeholder="Unit Number"
-        value={unit}
-        onChange={(e) => setUnit(e.target.value)}
-      />
-      <br />
-      <button onClick={handleSignup}>Register</button>
-    </div>
-  );
-}
+      Register as Admin
+    </label>
+
+    <button onClick={handleSignup}>Sign Up</button>
+  </div>
+);
