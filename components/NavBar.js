@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 const user = JSON.parse(localStorage.getItem("loggedInUser"));
 export default function NavBar() {
   const router = useRouter();
-
+  const [isAdmin, setIsAdmin] = useState(false);
   const handleLogout = () => {
     localStorage.removeItem("loggedInUser");
     router.push("/login");
