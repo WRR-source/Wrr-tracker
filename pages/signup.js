@@ -12,7 +12,7 @@ export default function Signup() {
     const users = JSON.parse(localStorage.getItem("users") || "[]");
     users.push({ name, unit, points: 0 });
     localStorage.setItem("users", JSON.stringify(users));
-    localStorage.setItem("loggedInUser", unit);
+    localStorage.setItem("loggedUser", unit);
     router.push("/");
   };
 
