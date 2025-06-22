@@ -1,47 +1,33 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import NavBar from "../components/NavBar";
+
 export default function Home() {
   const router = useRouter();
+
   const [user, setUser] = useState(null);
   const [plastic, setPlastic] = useState(0);
   const [cans, setCans] = useState(0);
   const [glass, setGlass] = useState(0);
 
   useEffect(() => {
-    const unit = localStorage.getItem("loggedInUser");
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const current = users.find((u) => u.unit === unit);
-    if (!current) {
-      router.push("/login");
-    } else {
-      setUser(current);
+    const storedUser = localStorage.getItem("loggedUser");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
     }
   }, []);
 
-  const addPoints = () => {
-    const total = plastic + cans + glass;
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const updated = users.map((u) =>
-      u.unit === user.unit ? { ...u, points: u.points + total } : u
-    );
-    localStorage.setItem("users", JSON.stringify(updated));
-    setUser((prev) => ({ ...prev, points: prev.points + total }));
-    setPlastic(0);
-    setCans(0);
-    setGlass(0);
-  };
-
   const handleLogout = () => {
-    localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("loggedUser");
     router.push("/login");
   };
 
   if (!user) return <div>Loading...</div>;
 
   return (
-    <NavBar />
-    <div style={{ padding: 20, fontFamily: "sans-serif" }}>
+    <>
+      <NavBar />
+      <div>Welcome, {user.name} (Unit {user.unit})</div>
       <h1>Welcome, {user.name} (Unit {user.unit})</h1>
 
       <div style={{ marginTop: 20 }}>
