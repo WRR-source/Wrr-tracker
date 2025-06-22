@@ -1,3 +1,4 @@
+// trigger redeploy
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import NavBar from "../components/NavBar";
