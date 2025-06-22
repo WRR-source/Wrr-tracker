@@ -5,6 +5,7 @@ export default function Signup() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [unit, setUnit] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const handleSignup = () => {
     if (!name || !unit) return alert("Please fill in both fields");
