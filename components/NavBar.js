@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-
+const user = JSON.parse(localStorage.getItem("loggedInUser"));
 export default function NavBar() {
   const router = useRouter();
 
@@ -24,6 +24,11 @@ export default function NavBar() {
         <button onClick={() => router.push("/rewards")} style={btn}>Rewards</button>
         <button onClick={() => router.push("/leaderboard")} style={btn}>Leaderboard</button>
         <button onClick={handleLogout} style={{ ...btn, backgroundColor: "tomato" }}>Logout</button>
+        {user?.isAdmin && (
+  <Link href="/admin">
+    <button>Admin</button>
+  </Link>
+)}
       </div>
     </nav>
   );
