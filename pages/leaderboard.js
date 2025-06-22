@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-
+import NavBar from "../components/NavBar";
 export default function Leaderboard() {
   const router = useRouter();
   const [users, setUsers] = useState([]);
@@ -22,6 +22,7 @@ export default function Leaderboard() {
   if (!currentUser) return <div>Loading...</div>;
 
   return (
+    <NavBar />
     <div style={{ padding: 20, fontFamily: "sans-serif" }}>
       <h1>🏆 Leaderboard</h1>
       <p>Logged in as: <strong>{currentUser.name}</strong> (Unit {currentUser.unit})</p>
