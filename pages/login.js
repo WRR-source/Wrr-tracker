@@ -12,7 +12,7 @@ export default function Login() {
       alert("User not found. Please sign up.");
       return;
     }
-    localStorage.setItem("loggedInUser", unit);
+    localStorage.setItem("loggedUser", unit);
     router.push("/");
   };
 
