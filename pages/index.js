@@ -14,12 +14,43 @@ export default function Home() {
     const storedUser = localStorage.getItem("loggedUser");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
+    } else {
+      router.push("/login");
     }
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("loggedUser");
-    router.push("/login");
+  const handleSubmit = () => {
+    if (!user) return;
+
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const updated = users.map((u) =>
+      u.unit === user.unit
+        ? {
+            ...u,
+            points: u.points + plastic + cans + glass,
+          }
+        : u
+    );
+
+    localStorage.setItem("users", JSON.stringify(updated));
+    localStorage.setItem(
+      "loggedUser",
+      JSON.stringify({
+        ...user,
+        points: user.points + plastic + cans + glass,
+      })
+    );
+
+    setUser((prev) => ({
+      ...prev,
+      points: prev.points + plastic + cans + glass,
+    }));
+
+    setPlastic(0);
+    setCans(0);
+    setGlass(0);
+
+    alert("Recycling submitted successfully!");
   };
 
   if (!user) return <div>Loading...</div>;
@@ -27,35 +58,48 @@ export default function Home() {
   return (
     <>
       <NavBar />
-      <div>Welcome, {user.name} (Unit {user.unit})</div>
-      <h1>Welcome, {user.name} (Unit {user.unit})</h1>
+      <div style={{ padding: 20, fontFamily: "sans-serif" }}>
+        <h1>Welcome, {user.name} (Unit {user.unit})</h1>
+        <p>Points: {user.points}</p>
 
-      <div style={{ marginTop: 20 }}>
-        <h2>Add Recycled Items</h2>
-        <label>
-          Plastic Bottles 🥤:
-          <input type="number" value={plastic} onChange={(e) => setPlastic(Number(e.target.value))} />
-        </label>
-        <br />
-        <label>
-          Cans 🥫:
-          <input type="number" value={cans} onChange={(e) => setCans(Number(e.target.value))} />
-        </label>
-        <br />
-        <label>
-          Glass Bottles 🍾:
-          <input type="number" value={glass} onChange={(e) => setGlass(Number(e.target.value))} />
-        </label>
-        <br />
-        <button onClick={addPoints}>Add to Total</button>
+        <div style={{ marginTop: 20 }}>
+          <h2>Add Recycled Items</h2>
+
+          <label>
+            Plastic Bottles 🧴:
+            <input
+              type="number"
+              value={plastic}
+              onChange={(e) => setPlastic(Number(e.target.value))}
+            />
+          </label>
+          <br />
+          <label>
+            Cans 🥫:
+            <input
+              type="number"
+              value={cans}
+              onChange={(e) => setCans(Number(e.target.value))}
+            />
+          </label>
+          <br />
+          <label>
+            Glass Bottles 🍾:
+            <input
+              type="number"
+              value={glass}
+              onChange={(e) => setGlass(Number(e.target.value))}
+            />
+          </label>
+          <br />
+          <button
+            style={{ marginTop: 10, padding: "5px 10px" }}
+            onClick={handleSubmit}
+          >
+            Submit Recycling
+          </button>
+        </div>
       </div>
-
-      <div style={{ marginTop: 20 }}>
-        <h2>Your Points</h2>
-        <p style={{ fontSize: "24px", fontWeight: "bold" }}>{user.points} pts</p>
-      </div>
-
-      <button onClick={handleLogout} style={{ marginTop: 20, color: "red" }}>Logout</button>
-    </div>
+    </>
   );
 }
