@@ -30,39 +30,14 @@ export default function Rewards() {
 
   if (!user) return <div>Loading...</div>;
 
-  return (
+ return (
+  <>
     <NavBar />
     <div style={{ padding: 20, fontFamily: "sans-serif" }}>
       <h1>Rewards for {user.name}</h1>
-      <p>You have <strong>{user.points} points</strong></p>
-
-      <div style={{ marginTop: 30 }}>
-        <h2>Available Rewards</h2>
-        <ul>
-          {rewards.map((reward, index) => (
-            <li key={index} style={{ marginBottom: 10 }}>
-              {reward.name} – <strong>{reward.cost === 9999 ? "Top Recycler Only" : `${reward.cost} pts`}</strong>
-              {reward.cost !== 9999 && (
-                <button
-                  onClick={() => handleRedeem(reward)}
-                  disabled={user.points < reward.cost}
-                  style={{
-                    marginLeft: 10,
-                    padding: "4px 10px",
-                    backgroundColor: user.points >= reward.cost ? "green" : "gray",
-                    color: "white",
-                    border: "none",
-                    borderRadius: 4,
-                    cursor: user.points >= reward.cost ? "pointer" : "not-allowed",
-                  }}
-                >
-                  Redeem
-                </button>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
+      <p>
+        You have <strong>{user.points} points</strong>
+      </p>
     </div>
-  );
-}
+  </>
+);
