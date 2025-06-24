@@ -4,24 +4,27 @@ import NavBar from "../components/NavBar";
 
 function RewardsPage() {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
+    // Ensure this runs only on the client side
     if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("loggedUser");
-      if (stored) {
+      const storedUser = localStorage.getItem("loggedUser");
+      if (storedUser) {
         try {
-          const parsed = JSON.parse(stored);
-          setUser(parsed);
-        } catch (e) {
-          console.error("Failed to parse user:", e);
+          const parsedUser = JSON.parse(storedUser);
+          setUser(parsedUser);
+        } catch (error) {
+          console.error("Failed to parse loggedUser:", error);
         }
       }
-      setLoading(false);
+      setHydrated(true); // Mark as ready to render
     }
   }, []);
 
-  if (loading) return <p>Loading rewards...</p>;
+  if (!hydrated) {
+    return <p>Loading rewards...</p>; // Prevents early rendering
+  }
 
   if (!user) {
     return (
