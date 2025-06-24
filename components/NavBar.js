@@ -1,98 +1,62 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 export default function NavBar() {
-  const router = useRouter();
-  const [loggedUser, setLoggedUser] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("loggedUser"));
-    setLoggedUser(user);
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("loggedUser");
+      if (stored) {
+        try {
+          setUser(JSON.parse(stored));
+        } catch (e) {
+          console.error("Error parsing user:", e);
+        }
+      }
+    }
   }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("loggedUser");
-    router.push("/login");
-  };
-
-  const isActive = (path) => router.pathname === path;
 
   return (
     <nav style={styles.nav}>
-      <div style={styles.logo}>♻ WRR Tracker</div>
-      <div style={styles.links}>
-        <NavLink href="/" label="Home" active={isActive("/")} />
-        <NavLink href="/rewards" label="Rewards" active={isActive("/rewards")} />
-        <NavLink href="/leaderboard" label="Leaderboard" active={isActive("/leaderboard")} />
-        {!loggedUser && (
+      <div>
+        <Link href="/" style={styles.link}>Home</Link>
+        {user && <Link href="/rewards" style={styles.link}>Rewards</Link>}
+        {user && <Link href="/leaderboard" style={styles.link}>Leaderboard</Link>}
+      </div>
+      <div>
+        {!user ? (
           <>
-            <NavLink href="/signup" label="Sign Up" active={isActive("/signup")} />
-            <NavLink href="/login" label="Login" active={isActive("/login")} />
+            <Link href="/signup" style={styles.link}>Sign Up</Link>
+            <Link href="/login" style={styles.link}>Login</Link>
           </>
-        )}
-        {loggedUser && (
-          <>
-            <span style={styles.welcome}>Hi, {loggedUser.name}</span>
-            <button onClick={handleLogout} style={styles.logout}>Logout</button>
-          </>
+        ) : (
+          <button onClick={() => {
+            localStorage.removeItem("loggedUser");
+            window.location.href = "/login";
+          }} style={styles.link}>
+            Logout
+          </button>
         )}
       </div>
     </nav>
   );
 }
 
-function NavLink({ href, label, active }) {
-  return (
-    <Link href={href}>
-      <span style={{ ...styles.link, ...(active ? styles.activeLink : {}) }}>
-        {label}
-      </span>
-    </Link>
-  );
-}
-
 const styles = {
   nav: {
+    backgroundColor: "#e0e4dd",
+    padding: "10px 20px",
     display: "flex",
     justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#e0f2e9", // light earth tone green
-    padding: "10px 20px",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-    position: "sticky",
-    top: 0,
-    zIndex: 1000,
-  },
-  logo: {
-    fontWeight: "bold",
-    fontSize: "18px",
-  },
-  links: {
-    display: "flex",
-    gap: "15px",
-    alignItems: "center",
+    borderBottom: "2px solid #c5c7c1",
+    marginBottom: "20px"
   },
   link: {
-    cursor: "pointer",
+    marginRight: 15,
     textDecoration: "none",
-    color: "#444",
-    fontWeight: 500,
-  },
-  activeLink: {
-    color: "#0f5132",
-    textDecoration: "underline",
-  },
-  welcome: {
-    fontStyle: "italic",
-    color: "#2e7d32",
-  },
-  logout: {
-    padding: "4px 10px",
-    border: "none",
-    backgroundColor: "#d32f2f",
-    color: "#fff",
-    borderRadius: "4px",
-    cursor: "pointer",
-  },
+    color: "#333",
+    fontWeight: "bold",
+    cursor: "pointer"
+  }
 };
