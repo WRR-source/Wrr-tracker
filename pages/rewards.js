@@ -5,21 +5,28 @@ import NavBar from "../components/NavBar";
 export default function Rewards() {
   const router = useRouter();
   const [user, setUser] = useState(null);
-  const [ready, setReady] = useState(false); // prevents early redirect
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("loggedUser");
-      if (stored) {
-        setUser(JSON.parse(stored));
+      const storedUser = localStorage.getItem("loggedUser");
+
+      if (storedUser) {
+        try {
+          const parsed = JSON.parse(storedUser);
+          setUser(parsed);
+        } catch (error) {
+          console.error("Error parsing user data:", error);
+        }
       } else {
         router.replace("/signup");
       }
-      setReady(true);
+
+      setLoading(false);
     }
   }, []);
 
-  if (!ready) return null; // wait for auth check before rendering
+  if (loading) return null;
 
   return (
     <>
@@ -30,9 +37,9 @@ export default function Rewards() {
           Welcome, {user?.name || "Guest"}! You have <strong>{user?.points || 0}</strong> points.
         </p>
         <ul>
-          <li>🎁 $5 Gift Card – 50 points</li>
-          <li>📱 Recycled Phone Case – 150 points</li>
-          <li>🎧 Bluetooth Earbuds – 300 points</li>
+          <li>🎁 $5 Gift Card – 150 points</li>
+          <li>📱 Recycled Phone Case – 350 points</li>
+          <li>🎧 Bluetooth Earbuds – 550 points</li>
           <li>🎉 Mystery Grand Prize – ??? points</li>
         </ul>
       </div>
