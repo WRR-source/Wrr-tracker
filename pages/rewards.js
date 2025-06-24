@@ -1,35 +1,32 @@
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import NavBar from "../components/NavBar";
 
-export default function Rewards() {
+function RewardsPage() {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [ready, setReady] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedUser = localStorage.getItem("loggedUser");
-      console.log("Stored user raw:", storedUser);
+    const storedUser = typeof window !== "undefined" && localStorage.getItem("loggedUser");
 
-      if (storedUser) {
-        try {
-          const parsedUser = JSON.parse(storedUser);
-          console.log("Parsed user object:", parsedUser);
-          setUser(parsedUser);
-        } catch (error) {
-          console.error("Error parsing stored user:", error);
-        }
-      } else {
-        console.warn("No user found, redirecting...");
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+      } catch (err) {
+        console.error("Failed to parse user:", err);
         router.replace("/signup");
       }
-
-      setLoading(false);
+    } else {
+      router.replace("/signup");
     }
+
+    setReady(true);
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (!ready) return null;
 
   return (
     <>
@@ -41,12 +38,17 @@ export default function Rewards() {
           <strong>{user?.points ?? 0}</strong> points.
         </p>
         <ul>
-          <li>🎁 $5 Gift Card – 150 points</li>
-          <li>📱 Recycled Phone Case – 350 points</li>
-          <li>🎧 Bluetooth Earbuds – 550 points</li>
+          <li>🎁 $5 Gift Card – 50 points</li>
+          <li>📱 Recycled Phone Case – 150 points</li>
+          <li>🎧 Bluetooth Earbuds – 300 points</li>
           <li>🎉 Mystery Grand Prize – ??? points</li>
         </ul>
       </div>
     </>
   );
 }
+
+// This makes sure the page runs **only on the client**
+export default dynamic(() => Promise.resolve(RewardsPage), {
+  ssr: false,
+});
