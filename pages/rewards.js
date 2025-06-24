@@ -8,26 +8,26 @@ function RewardsPage() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const data = localStorage.getItem("loggedUser");
-      if (data) {
+      const stored = localStorage.getItem("loggedUser");
+      if (stored) {
         try {
-          const parsed = JSON.parse(data);
+          const parsed = JSON.parse(stored);
           setUser(parsed);
         } catch (e) {
-          console.error("Error parsing user data:", e);
+          console.error("Failed to parse user:", e);
         }
       }
       setLoading(false);
     }
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p>Loading rewards...</p>;
 
   if (!user) {
     return (
       <div style={{ padding: 20 }}>
         <h2>Rewards</h2>
-        <p style={{ color: "red" }}>No user found. Please sign up or log in.</p>
+        <p style={{ color: "red" }}>Please sign up or log in to view rewards.</p>
       </div>
     );
   }
@@ -42,9 +42,9 @@ function RewardsPage() {
           <strong>{user.points}</strong> points.
         </p>
         <ul>
-          <li>🎁 $5 Gift Card – 50 points</li>
-          <li>📱 Recycled Phone Case – 150 points</li>
-          <li>🎧 Bluetooth Earbuds – 300 points</li>
+          <li>🎁 $5 Gift Card – 150 points</li>
+          <li>📱 Recycled Phone Case – 350 points</li>
+          <li>🎧 Bluetooth Earbuds – 550 points</li>
           <li>🎉 Mystery Grand Prize – ??? points</li>
         </ul>
       </div>
