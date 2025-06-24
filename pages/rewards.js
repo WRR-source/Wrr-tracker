@@ -38,9 +38,9 @@ function RewardsPage() {
           <strong>{user?.points ?? 0}</strong> points.
         </p>
         <ul>
-          <li>🎁 $5 Gift Card – 50 points</li>
-          <li>📱 Recycled Phone Case – 150 points</li>
-          <li>🎧 Bluetooth Earbuds – 300 points</li>
+          <li>🎁 $5 Gift Card – 150 points</li>
+          <li>📱 Recycled Phone Case – 350 points</li>
+          <li>🎧 Bluetooth Earbuds – 550 points</li>
           <li>🎉 Mystery Grand Prize – ??? points</li>
         </ul>
       </div>
