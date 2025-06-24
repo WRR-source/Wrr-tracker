@@ -3,22 +3,25 @@ import { useRouter } from "next/router";
 import NavBar from "../components/NavBar";
 
 export default function Rewards() {
-  const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedUser = localStorage.getItem("loggedUser");
+      console.log("Stored user raw:", storedUser);
 
       if (storedUser) {
         try {
-          const parsed = JSON.parse(storedUser);
-          setUser(parsed);
+          const parsedUser = JSON.parse(storedUser);
+          console.log("Parsed user object:", parsedUser);
+          setUser(parsedUser);
         } catch (error) {
-          console.error("Error parsing user data:", error);
+          console.error("Error parsing stored user:", error);
         }
       } else {
+        console.warn("No user found, redirecting...");
         router.replace("/signup");
       }
 
@@ -26,7 +29,7 @@ export default function Rewards() {
     }
   }, []);
 
-  if (loading) return null;
+  if (loading) return <p>Loading...</p>;
 
   return (
     <>
@@ -34,7 +37,8 @@ export default function Rewards() {
       <div style={{ padding: 20 }}>
         <h2>Rewards Center</h2>
         <p>
-          Welcome, {user?.name || "Guest"}! You have <strong>{user?.points || 0}</strong> points.
+          Welcome, {user?.name || "Guest"}! You have{" "}
+          <strong>{user?.points ?? 0}</strong> points.
         </p>
         <ul>
           <li>🎁 $5 Gift Card – 150 points</li>
