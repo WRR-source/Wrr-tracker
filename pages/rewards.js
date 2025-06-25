@@ -1,23 +1,32 @@
-// FILE: /pages/rewards.js
-
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import NavBar from "../components/NavBar";
 
 export default function Rewards() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(undefined); // undefined = still loading
   const router = useRouter();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("loggedUser");
-    if (!storedUser) {
-      router.push("/signup");
-    } else {
-      setUser(JSON.parse(storedUser));
+    if (typeof window !== "undefined") {
+      const data = localStorage.getItem("loggedUser");
+
+      if (data) {
+        setUser(JSON.parse(data)); // ✅ User found
+      } else {
+        setUser(null); // ❌ No user found
+      }
     }
   }, []);
 
-  if (!user) return <div>Loading...</div>;
+  useEffect(() => {
+    if (user === null) {
+      router.push("/signup"); // 🔁 Redirect AFTER we know for sure
+    }
+  }, [user]);
+
+  if (user === undefined) {
+    return <div>Loading user info...</div>; // ⏳ Initial load
+  }
 
   return (
     <>
