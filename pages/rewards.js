@@ -9,7 +9,7 @@ export default function Rewards() {
   const router = useRouter();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("loggedInUser");
+    const storedUser = localStorage.getItem("loggedUser");
     if (!storedUser) {
       router.push("/signup");
     } else {
