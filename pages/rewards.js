@@ -1,60 +1,68 @@
 import { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import NavBar from "../components/NavBar";
-
-function RewardsPage() {
+export default function Rewards() {
+  const router = useRouter();
   const [user, setUser] = useState(null);
-  const [hydrated, setHydrated] = useState(false);
+
+  const rewards = [
+    { name: "🎁 $5 Gift Card", cost: 150 },
+    { name: "📱 Phone Charger", cost: 350 },
+    { name: "🎧 Bluetooth Speaker", cost: 550 },
+    { name: "🎉 Mystery Grand Prize", cost: 9999 }, // unreachable on purpose
+  ];
 
   useEffect(() => {
-    // Run only on client
-    if (typeof window !== "undefined") {
-      const storedUser = localStorage.getItem("loggedUser");
-      if (storedUser) {
-        try {
-          const parsed = JSON.parse(storedUser);
-          setUser(parsed);
-        } catch (e) {
-          console.error("Invalid JSON in localStorage");
-        }
-      }
-      setHydrated(true);
+    const unit = localStorage.getItem("loggedInUser");
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    const current = users.find((u) => u.unit === unit);
+    if (!current) {
+      router.push("/login");
+    } else {
+      setUser(current);
     }
   }, []);
 
-  if (!hydrated) return <p>Loading...</p>;
+  const handleRedeem = (reward) => {
+    alert(`You redeemed: ${reward.name}`);
+    // Future: actually deduct points and update user
+  };
 
-  if (!user) {
-    return (
-      <>
-        <NavBar />
-        <div style={{ padding: 20 }}>
-          <h2>Rewards</h2>
-          <p style={{ color: "red" }}>Please sign up or log in to view rewards.</p>
-        </div>
-      </>
-    );
-  }
+  if (!user) return <div>Loading...</div>;
 
   return (
-    <>
-      <NavBar />
-      <div style={{ padding: 20 }}>
-        <h2>Rewards Center</h2>
-        <p>
-          Welcome, <strong>{user.name}</strong>! You have{" "}
-          <strong>{user.points}</strong> points.
-        </p>
+    <NavBar />
+    <div style={{ padding: 20, fontFamily: "sans-serif" }}>
+      <h1>Rewards for {user.name}</h1>
+      <p>You have <strong>{user.points} points</strong></p>
+
+      <div style={{ marginTop: 30 }}>
+        <h2>Available Rewards</h2>
         <ul>
-          <li>🎁 $5 Gift Card – 50 points</li>
-          <li>📱 Recycled Phone Case – 150 points</li>
-          <li>🎧 Bluetooth Earbuds – 300 points</li>
-          <li>🎉 Mystery Grand Prize – ??? points</li>
+          {rewards.map((reward, index) => (
+            <li key={index} style={{ marginBottom: 10 }}>
+              {reward.name} – <strong>{reward.cost === 9999 ? "Top Recycler Only" : `${reward.cost} pts`}</strong>
+              {reward.cost !== 9999 && (
+                <button
+                  onClick={() => handleRedeem(reward)}
+                  disabled={user.points < reward.cost}
+                  style={{
+                    marginLeft: 10,
+                    padding: "4px 10px",
+                    backgroundColor: user.points >= reward.cost ? "green" : "gray",
+                    color: "white",
+                    border: "none",
+                    borderRadius: 4,
+                    cursor: user.points >= reward.cost ? "pointer" : "not-allowed",
+                  }}
+                >
+                  Redeem
+                </button>
+              )}
+            </li>
+          ))}
         </ul>
       </div>
-    </>
+    </div>
   );
 }
-
-// Dynamic export disables SSR for this page
-export default dynamic(() => Promise.resolve(RewardsPage), { ssr: false });
