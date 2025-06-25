@@ -1,68 +1,37 @@
+// FILE: /pages/rewards.js
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import NavBar from "../components/NavBar";
-export default function Rewards() {
-  const router = useRouter();
-  const [user, setUser] = useState(null);
 
-  const rewards = [
-    { name: "🎁 $5 Gift Card", cost: 150 },
-    { name: "📱 Phone Charger", cost: 350 },
-    { name: "🎧 Bluetooth Speaker", cost: 550 },
-    { name: "🎉 Mystery Grand Prize", cost: 9999 }, // unreachable on purpose
-  ];
+export default function Rewards() {
+  const [user, setUser] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
-    const unit = localStorage.getItem("loggedInUser");
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const current = users.find((u) => u.unit === unit);
-    if (!current) {
-      router.push("/login");
+    const storedUser = localStorage.getItem("loggedInUser");
+    if (!storedUser) {
+      router.push("/signup");
     } else {
-      setUser(current);
+      setUser(JSON.parse(storedUser));
     }
   }, []);
-
-  const handleRedeem = (reward) => {
-    alert(`You redeemed: ${reward.name}`);
-    // Future: actually deduct points and update user
-  };
 
   if (!user) return <div>Loading...</div>;
 
   return (
-    <NavBar />
-    <div style={{ padding: 20, fontFamily: "sans-serif" }}>
-      <h1>Rewards for {user.name}</h1>
-      <p>You have <strong>{user.points} points</strong></p>
-
-      <div style={{ marginTop: 30 }}>
-        <h2>Available Rewards</h2>
+    <>
+      <NavBar />
+      <div style={{ padding: 20 }}>
+        <h1>Rewards</h1>
+        <p>Welcome, {user.name}!</p>
+        <p>You have {user.points} points.</p>
         <ul>
-          {rewards.map((reward, index) => (
-            <li key={index} style={{ marginBottom: 10 }}>
-              {reward.name} – <strong>{reward.cost === 9999 ? "Top Recycler Only" : `${reward.cost} pts`}</strong>
-              {reward.cost !== 9999 && (
-                <button
-                  onClick={() => handleRedeem(reward)}
-                  disabled={user.points < reward.cost}
-                  style={{
-                    marginLeft: 10,
-                    padding: "4px 10px",
-                    backgroundColor: user.points >= reward.cost ? "green" : "gray",
-                    color: "white",
-                    border: "none",
-                    borderRadius: 4,
-                    cursor: user.points >= reward.cost ? "pointer" : "not-allowed",
-                  }}
-                >
-                  Redeem
-                </button>
-              )}
-            </li>
-          ))}
+          <li>🎁 Gift Card - 100 points</li>
+          <li>📱 Electronics - 500 points</li>
+          <li>🎉 Surprise Grand Prize - 1000 points</li>
         </ul>
       </div>
-    </div>
+    </>
   );
 }
